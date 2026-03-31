@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
   const { action } = req.query;
 
-  // ── CHAT ──────────────────────────────────────────
+  // ── CHAT (conversa com o bot) ──────────────────────
   if (!action || action === 'chat') {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
     const { message, sessionId } = req.body;
@@ -29,18 +29,8 @@ export default async function handler(req, res) {
     }
   }
 
-  // ── WORKSPACES ────────────────────────────────────
-  if (action === 'workspaces') {
-    try {
-      const r = await fetch(`${BASE}/workspace/list`, { headers });
-      const data = await r.json();
-      return res.status(200).json(data);
-    } catch (e) {
-      return res.status(500).json({ error: String(e) });
-    }
-  }
-
-  // ── CREDITI ───────────────────────────────────────
+  // ── CREDITI WORKSPACE ─────────────────────────────
+  // GET /v2/workspace/{workspaceId}/credits
   if (action === 'credits') {
     try {
       const r = await fetch(`${BASE}/workspace/${WS_ID}/credits`, { headers });
@@ -51,10 +41,11 @@ export default async function handler(req, res) {
     }
   }
 
-  // ── CONVERSAZIONI ─────────────────────────────────
-  if (action === 'interactions') {
+  // ── LISTA CHATS ───────────────────────────────────
+  // GET /v2/workspace/{workspaceId}/chats
+  if (action === 'chats') {
     try {
-      const r = await fetch(`${BASE}/workspace/${WS_ID}/interactions`, { headers });
+      const r = await fetch(`${BASE}/workspace/${WS_ID}/chats`, { headers });
       const data = await r.json();
       return res.status(200).json(data);
     } catch (e) {
@@ -62,12 +53,13 @@ export default async function handler(req, res) {
     }
   }
 
-  // ── MESSAGGI ──────────────────────────────────────
+  // ── MESSAGGI DI UN CHAT ───────────────────────────
+  // GET /v2/chat/{chatId}/messages
   if (action === 'messages') {
-    const { interactionId } = req.query;
-    if (!interactionId) return res.status(400).json({ error: 'interactionId obrigatório' });
+    const { chatId } = req.query;
+    if (!chatId) return res.status(400).json({ error: 'chatId obrigatório' });
     try {
-      const r = await fetch(`${BASE}/interaction/${interactionId}/messages`, { headers });
+      const r = await fetch(`${BASE}/chat/${chatId}/messages`, { headers });
       const data = await r.json();
       return res.status(200).json(data);
     } catch (e) {
@@ -76,9 +68,10 @@ export default async function handler(req, res) {
   }
 
   // ── CONSUMO CREDITI AGENTE ────────────────────────
+  // GET /v2/agent/{agentId}/credits-spent
   if (action === 'consumption') {
     try {
-      const r = await fetch(`${BASE}/agent/${BOT_ID}/credits`, { headers });
+      const r = await fetch(`${BASE}/agent/${BOT_ID}/credits-spent`, { headers });
       const data = await r.json();
       return res.status(200).json(data);
     } catch (e) {
