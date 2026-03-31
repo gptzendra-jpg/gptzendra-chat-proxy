@@ -29,14 +29,14 @@ export default async function handler(req, res) {
     }
   }
 
-  // ── WORKSPACES (per trovare ID corretto) ──────────
+  // ── WORKSPACES ────────────────────────────────────
   if (action === 'workspaces') {
     try {
-      const r = await fetch(`${BASE}/workspace`, { headers });
+      const r = await fetch(`${BASE}/workspace/list`, { headers });
       const data = await r.json();
       return res.status(200).json(data);
     } catch (e) {
-      return res.status(500).json({ error: 'Erro ao buscar workspaces.' });
+      return res.status(500).json({ error: String(e) });
     }
   }
 
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
       const data = await r.json();
       return res.status(200).json(data);
     } catch (e) {
-      return res.status(500).json({ error: 'Erro ao buscar créditos.' });
+      return res.status(500).json({ error: String(e) });
     }
   }
 
@@ -58,7 +58,7 @@ export default async function handler(req, res) {
       const data = await r.json();
       return res.status(200).json(data);
     } catch (e) {
-      return res.status(500).json({ error: 'Erro ao buscar interações.' });
+      return res.status(500).json({ error: String(e) });
     }
   }
 
@@ -71,18 +71,18 @@ export default async function handler(req, res) {
       const data = await r.json();
       return res.status(200).json(data);
     } catch (e) {
-      return res.status(500).json({ error: 'Erro ao buscar mensagens.' });
+      return res.status(500).json({ error: String(e) });
     }
   }
 
-  // ── AGENTE (consumo crediti) ───────────────────────
+  // ── CONSUMO CREDITI AGENTE ────────────────────────
   if (action === 'consumption') {
     try {
       const r = await fetch(`${BASE}/agent/${BOT_ID}/credits`, { headers });
       const data = await r.json();
       return res.status(200).json(data);
     } catch (e) {
-      return res.status(500).json({ error: 'Erro ao buscar consumo.' });
+      return res.status(500).json({ error: String(e) });
     }
   }
 
